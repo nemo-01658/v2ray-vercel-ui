@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>V2Ray Config Generator</title>
+  <style>
+    body {font-family:Arial;background:#111;color:#0f0;padding:30px;}
+    input, button {padding:12px;margin:8px 0;width:400px;}
+    button {background:#0f0;color:black;font-weight:bold;}
+    pre {background:#222;padding:15px;}
+  </style>
+</head>
+<body>
+  <h1>VLESS WS TLS Config</h1>
+  Domain: <input id="d" value="your-project.vercel.app"><br>
+  UUID: <input id="u" value="de04add9-5c68-8bab-950c-08cd5320df18"><br>
+  Path: <input id="p" value="/vless"><br><br>
+  <button onclick="gen()">Generate</button>
+  <pre id="o"></pre>
+
+  <script>
+    function gen() {
+      var d = document.getElementById('d').value;
+      var u = document.getElementById('u').value;
+      var p = document.getElementById('p').value || '/vless';
+      var link = 'vless://' + u + '@' + d + ':443?encryption=none&security=tls&type=ws&host=' + d + '&path=' + p + '#VLESS-Vercel';
+      document.getElementById('o').textContent = link;
+    }
+  </script>
+</body>
+</html>
