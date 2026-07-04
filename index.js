@@ -1,44 +1,40 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(express.static('public'));
-app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
-    <html>
+    <html lang="si">
     <head>
       <meta charset="utf-8">
-      <title>V2Ray VLESS WS TLS Config Generator</title>
+      <title>V2Ray Config Generator</title>
       <style>
-        body { font-family: Arial; margin: 20px; background: #0f0f0f; color: #0f0; }
-        input, button { padding: 10px; margin: 5px; }
-        button { background: #0f0; color: black; border: none; cursor: pointer; }
-        pre { background: #111; padding: 15px; overflow: auto; }
+        body { font-family: Arial; background: #111; color: #0f0; padding: 20px; }
+        input, button { padding: 12px; margin: 8px 0; width: 100%; max-width: 500px; }
+        button { background: #0f0; color: black; font-weight: bold; }
+        pre { background: #222; padding: 15px; white-space: pre-wrap; }
       </style>
     </head>
     <body>
-      <h1>V2Ray VLESS + WS + TLS Config Generator</h1>
+      <h1>VLESS + WS + TLS Config Generator</h1>
       
-      <input type="text" id="domain" placeholder="Your Vercel Domain (e.g. yourproject.vercel.app)" style="width:400px"><br>
-      <input type="text" id="uuid" placeholder="UUID" value="${crypto.randomUUID ? crypto.randomUUID() : 'de04add9-5c68-8bab-950c-08cd5320df18'}"><br>
-      <input type="text" id="path" placeholder="Path" value="/argo-vless"><br><br>
+      <input type="text" id="domain" placeholder="Vercel Domain (e.g. yourproject.vercel.app)" value=""><br>
+      <input type="text" id="uuid" placeholder="UUID" value="de04add9-5c68-8bab-950c-08cd5320df18"><br>
+      <input type="text" id="path" placeholder="Path" value="/vless"><br><br>
       
-      <button onclick="generate()">Generate Config</button>
+      <button onclick="generateConfig()">Generate Config</button>
       
-      <pre id="output"></pre>
+      <pre id="output" style="margin-top:20px;"></pre>
 
       <script>
-        function generate() {
-          const domain = document.getElementById('domain').value || 'your-domain.vercel.app';
-          const uuid = document.getElementById('uuid').value;
-          const path = document.getElementById('path').value || '/argo-vless';
+        function generateConfig() {
+          const domain = document.getElementById('domain').value.trim() || 'your-domain.vercel.app';
+          const uuid = document.getElementById('uuid').value.trim();
+          const path = document.getElementById('path').value.trim() || '/vless';
 
-          const config = \`vless://\${uuid}@\${domain}:443?encryption=none&security=tls&type=ws&host=\${domain}&path=\${path}#VLESS-WS-TLS-Vercel\`;
+          const link = `vless://${uuid}@${domain}:443?encryption=none&security=tls&type=ws&host=${domain}&path=${encodeURIComponent(path)}#VLESS-WS-TLS-Vercel`;
 
-          document.getElementById('output').textContent = config;
+          document.getElementById('output').textContent = link;
         }
       </script>
     </body>
@@ -46,4 +42,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-app.listen(port, () => console.log(\`Server running on port \${port}\`));
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log('Server running');
+});
